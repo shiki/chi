@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+require 'rubygems'
+require 'thor'
+
+require './commands/backup.rb'
+
+module Chi
+  class Main < Thor
+    desc "backup SUBCOMMAND ...ARGS", "Utilities for backing up multiple folders"
+    subcommand "backup", BackupCommand
+  end
+end
+
+Chi::Main.start()
