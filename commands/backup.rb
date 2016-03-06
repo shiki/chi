@@ -11,11 +11,17 @@ module Chi
       config = YAML.load_file(Dir.home + '/.chi.config.yaml')
       config['backup']['zip']['paths'].each do |path|
         path = File.expand_path(path)
+        git_dir = path + '/.git'
+        update_git_dir(git_dir) if Dir.exists?(git_dir)
         zip_folder(path)
       end
     end
 
     no_commands {
+      def update_git_dir(path)
+        run "git -C '#{path}' fetch"
+      end
+
       def zip_folder(path)
         target_base_path = File.expand_path('~/Desktop')
         parent_path = File.dirname(path)
