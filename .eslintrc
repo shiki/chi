@@ -1,0 +1,23 @@
+{
+  "extends": "airbnb",
+  "plugins": [
+    "import"
+  ],
+  "rules": {
+    "semi": [
+      "error",
+      "never"
+    ],
+    "comma-dangle": [
+      "error",
+      "only-multiline"
+    ],
+    "arrow-parens": [
+      "error",
+      "as-needed"
+    ],
+    "no-use-before-define": "off",
+    "import/prefer-default-export": "warn",
+    "import/no-extraneous-dependencies": "off"
+  }
+}
