@@ -1,0 +1,8 @@
+backup:
+  # Where the compressed backup files will be stored
+  destination: ~/Desktop
+  # Folders to compress (backup)
+  source:
+    - ~/Dropbox
+    - path: ~/Projects/company/my-web-project
+      name: my-web-project
