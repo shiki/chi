@@ -17,10 +17,15 @@ async function handleAction(args, options, logger) {
     throw new Error(`Destination path ${destinationPath} is not accessible. Make sure that it exists and is writeable.`)
   }
 
+  const destinationSubFolderPath = createDestinationSubFolder(destinationPath)
+  logger.info(`Destination subfolder: ${destinationSubFolderPath}`)
+
   config.backup.source.forEach(sourceItem => {
     const { sourcePath, zipFileName } = sourceItemConfigToPathAndZipFileName(sourceItem)
-    backup({ sourcePath, zipFileName, destinationPath, logger })
+    backup({ sourcePath, zipFileName, destinationPath: destinationSubFolderPath, logger })
   })
+
+  logger.info('Done!')
 }
 
 function backup({ sourcePath, zipFileName, destinationPath, logger }) {
@@ -74,6 +79,15 @@ function destinationPathIsValid(destinationPath, logger) {
     logger.error(e.message)
     return false
   }
+}
+
+function createDestinationSubFolder(destinationPath) {
+  const subFolderPath = path.join(destinationPath, moment().format('YYYY-MM-DD'))
+  if (!fs.existsSync(subFolderPath)) {
+    shell.mkdir(subFolderPath)
+  }
+
+  return subFolderPath
 }
 
 function createTempFolderPath() {
