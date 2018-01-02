@@ -13,6 +13,7 @@ consoleLogger.cli()
 
 prog.logger(consoleLogger).version('0.0.1')
 
-require('./commands/backup')
+require('./commands/backupFolders')
+require('./commands/backupCameraUploads')
 
 prog.parse(process.argv)

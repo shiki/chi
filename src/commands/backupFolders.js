@@ -2,25 +2,31 @@ import fs from 'fs'
 import os from 'os'
 import path from 'path'
 
-import yaml from 'js-yaml'
 import shell from 'shelljs'
 import moment from 'moment'
 import untildify from 'untildify'
 import prog from 'caporal'
+import isDirectory from 'is-directory'
 
-prog.command('backup', 'Backup folders defined in .chi.config.yml').action(handleAction)
+import loadConfig from '../loadConfig'
+import { pathIsWriteable } from '../utils'
+
+prog
+  .command('backup folders', 'Compresses folders and copies them to a single destination. Executes `git fetch` first if they are git projects')
+  .action(handleAction)
 
 async function handleAction(args, options, logger) {
-  const config = yaml.safeLoad(fs.readFileSync(`${__dirname}/../../.chi.config.yaml`, 'utf8'))
-  const destinationPath = untildify(config.backup.destination)
-  if (!destinationPathIsValid(destinationPath, logger)) {
+  const config = loadConfig().backup.folders
+
+  const destinationPath = untildify(config.destination)
+  if (!isDirectory.sync(destinationPath) || !pathIsWriteable(destinationPath)) {
     throw new Error(`Destination path ${destinationPath} is not accessible. Make sure that it exists and is writeable.`)
   }
 
   const destinationSubFolderPath = createDestinationSubFolder(destinationPath)
   logger.info(`Destination subfolder: ${destinationSubFolderPath}`)
 
-  config.backup.source.forEach(sourceItem => {
+  config.source.forEach(sourceItem => {
     const { sourcePath, zipFileName } = sourceItemConfigToPathAndZipFileName(sourceItem)
     backup({ sourcePath, zipFileName, destinationPath: destinationSubFolderPath, logger })
   })
@@ -64,21 +70,6 @@ function sourceItemConfigToPathAndZipFileName(sourceItem) {
   }
 
   return { sourcePath, zipFileName }
-}
-
-function destinationPathIsValid(destinationPath, logger) {
-  try {
-    const isDirectory = fs.lstatSync(destinationPath).isDirectory()
-    if (!isDirectory) {
-      return false
-    }
-
-    fs.accessSync(destinationPath, fs.constants.W_OK)
-    return true
-  } catch (e) {
-    logger.error(e.message)
-    return false
-  }
 }
 
 function createDestinationSubFolder(destinationPath) {

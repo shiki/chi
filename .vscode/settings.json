@@ -1,8 +1,11 @@
-// Place your settings in this file to overwrite default and user settings.
 {
+  // Place your settings in this file to overwrite default and user settings.
   "editor.formatOnSave": true,
+  "prettier.eslintIntegration": true,
   "prettier.printWidth": 160,
+  "prettier.tabWidth": 2,
   "prettier.singleQuote": true,
   "prettier.trailingComma": "none",
-  "prettier.semi": false
+  "prettier.semi": false,
+  "editor.tabSize": 2
 }
