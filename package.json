@@ -10,7 +10,7 @@
     "lodash": ">= 4.17.15",
     "mime": "^2.1.0",
     "moment": "^2.18.1",
-    "shelljs": "^0.7.8",
+    "shelljs": "^0.8.5",
     "untildify": "^3.0.2"
   },
   "devDependencies": {
